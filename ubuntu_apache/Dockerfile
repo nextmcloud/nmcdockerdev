@@ -1,15 +1,15 @@
 FROM nextcloud:apache
 
-# do os update first
-RUN apt-get update
-
 # install common tools
 # Install phpunit
 # INstall php-cs-fixer
 # Install krankerl
 # Install Composer for krankerl (only)
 # Install nodejs,npm for krankerl (only)
-RUN apt-get install -y jq \
+RUN apt-get update \
+    && apt-get install -y jq supervisor cron \
+    && mkdir -p /var/log/supervisord \
+    && mkdir -p /var/run/supervisord \
     && curl -L https://cs.symfony.com/download//php-cs-fixer-v3.phar -o php-cs-fixer > /usr/local/bin/php-cs-fixer \
     && chmod +x /usr/local/bin/php-cs-fixer \
     && curl -L https://phar.phpunit.de/phpunit-8.phar > /usr/local/bin/phpunit \
@@ -42,3 +42,12 @@ RUN set -ex; \
 #    ; \
 #    pecl install smbclient; \
 #    docker-php-ext-enable smbclient;
+
+# see https://github.com/nextcloud/docker/.examples
+COPY supervisord.conf /etc
+
+ENV NEXTCLOUD_UPDATE=1
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+
+

@@ -41,7 +41,7 @@ docker-compose -d up
 On first start, after container is up, got to http://localhost:8080
 and manually finish post install procedure (e.g. set admin, install basic apps)
 
-== Access by commandline
+== Access by commandline and Nextcloud log filtering
 By browser:
 
 
@@ -50,3 +50,22 @@ By commandline:
 docker exec -ti devnextcloud /bin/bash
 ```
 
+Filter Nextcloud log by app:
+```
+tail -f data/nextcloud.log |jq 'select(.app=="nmcprovisioning")'
+```
+
+Without deprecation warnings:
+```
+tail -f data/nextcloud.log |jq 'select(.app=="nmcprovisioning") | select(.message|contains("deprecated")|not)'
+```
+
+
+== Run occ command in container
+```
+docker exec --user www-data devnextcloud php occ ...
+```
+e.g. enable cron as Backgroundjob executor:
+```
+docker exec --user www-data devnextcloud php occ background:cron
+```
