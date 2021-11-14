@@ -11,9 +11,9 @@ docker build -t ncdev-1.2 .
 The files and directories requiring changes during development as mounted to local directories.
 Set `NMC_DEV_ROOT` environment variable to the place you want to have the artifacts in.
 
-With plain docker:
+With plain docker the first time after build:
 ```
-docker run -p 8080:80 -d \
+docker run --name=devnextcloud -p 8080:80 -d \
 -v $NMC_DEV_ROOT/nc_docker/apps:/var/www/html/custom_apps \
 -v $NMC_DEV_ROOT/nc_docker/config:/var/www/html/config \
 -v $NMC_DEV_ROOT/nc_docker/data:/var/www/html/data \
@@ -21,14 +21,32 @@ docker run -p 8080:80 -d \
 ncdev-1.2
 ```
 
-With docker-compose:
+Next time, you only have to run:
+```
+docker start devnextcloud
+```
+
+If you want to reuse name for a new container version, you have to call first:
+```
+docker stop devnextcloud
+docker rm `docker ps -a --quiet --filter name=devnextcloud`
+```
+Then, go ahead as described in first time run before.
+
+TODO: With docker-compose:
 ```
 docker-compose -d up
 ```
 
-== Access by commandline
+On first start, after container is up, got to http://localhost:8080
+and manually finish post install procedure (e.g. set admin, install basic apps)
 
+== Access by commandline
+By browser:
+
+
+By commandline:
 ```
-docker exec -ti CONTAINER_ID /bin/bash
+docker exec -ti devnextcloud /bin/bash
 ```
 
