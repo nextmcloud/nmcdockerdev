@@ -2,12 +2,14 @@
 
 
 
-== Building the image
+## Building the image
 ```
 docker build -t ncdev-1.2 .
 ```
 
-== Running the image
+
+
+## Running the image
 The files and directories requiring changes during development as mounted to local directories.
 Set `NMC_DEV_ROOT` environment variable to the place you want to have the artifacts in.
 
@@ -39,33 +41,45 @@ docker-compose -d up
 ```
 
 On first start, after container is up, got to http://localhost:8080
-and manually finish post install procedure (e.g. set admin, install basic apps)
-
-== Access by commandline and Nextcloud log filtering
-By browser:
+and manually finish post install procedure (e.g. set admin, install basic apps).
 
 
+
+## Access by commandline and Nextcloud log filtering
 By commandline:
 ```
 docker exec -ti devnextcloud /bin/bash
 ```
+The image contains composer, phpunit, php-cs-fixer and krankerl for direct use from commandline.
 
 Filter Nextcloud log by app:
 ```
 tail -f data/nextcloud.log |jq 'select(.app=="nmcprovisioning")'
 ```
 
-Without deprecation warnings:
+Without deprecation warnings: |contains("TimedJob")
 ```
-tail -f data/nextcloud.log |jq 'select(.app=="nmcprovisioning") | select(.message|contains("deprecated")|not)'
+tail -f data/nextcloud.log |jq 'select(.app=="nmcprovisioning" and has("exception")) | select(.exception.Trace[].class|contains(["SlupCircuitHalfOpenJob", "SlupCircuitBootJob"]))'
 ```
 
 
-== Run occ command in container
+## Run occ command in container
 ```
 docker exec --user www-data devnextcloud php occ ...
 ```
 e.g. enable cron as Backgroundjob executor:
 ```
 docker exec --user www-data devnextcloud php occ background:cron
+```
+
+docker exec --user www-data devnextcloud php occ user_oidc:provider Telekom --clientid="10TVL0SAM30000004901NEXTMAGENTACLOUD0000" --clientsecret="FGW2D999-***" --bearersecret="JQ17C999-***" --discoveryuri="https://accouhttps://accounts.login00.idm.ver.sul.t-online.de/.well-known/openid-configuration"  
+
+## Enable short links
+```
+config.php:
+  'htaccess.RewriteBase' => '/',
+```
+Then call:
+```
+docker exec --user www-data devnextcloud php occ maintenance:update:htaccess
 ```
