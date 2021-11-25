@@ -7,7 +7,7 @@ FROM nextcloud:apache
 # Install Composer for krankerl (only)
 # Install nodejs,npm for krankerl (only)
 RUN apt-get update \
-    && apt-get install -y jq supervisor cron \
+    && apt-get install -y jq supervisor cron sqlite3\
     && mkdir -p /var/log/supervisord \
     && mkdir -p /var/run/supervisord \
     && curl -L https://cs.symfony.com/download//php-cs-fixer-v3.phar -o php-cs-fixer > /usr/local/bin/php-cs-fixer \
