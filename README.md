@@ -67,12 +67,12 @@ tail -f data/nextcloud.log |jq 'select(.app=="nmcprovisioning" and has("exceptio
 ```
 docker exec --user www-data devnextcloud php occ ...
 ```
-e.g. enable cron as Backgroundjob executor:
+Example 1: enable cron as Backgroundjob executor:
 ```
 docker exec --user www-data devnextcloud php occ background:cron
 ```
 
-Example:
+Example 2: Config settings for OpenId connect provider
 ```
 docker exec --user www-data devnextcloud php occ user_oidc:provider Telekom --clientid="10TVL0SAM30***000004901NEXTMAGENTACLOUD0000***" --clientsecret="F***" --bearersecret="J***" --discoveryuri="https://accounts.demo/.well-known/openid-configuration" --unique-uid="0"
 ```
