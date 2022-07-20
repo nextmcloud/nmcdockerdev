@@ -1,4 +1,4 @@
-FROM nextcloud:apache
+FROM --platform=linux/amd64 nextcloud:apache
 
 # install common tools
 # Install phpunit
@@ -46,7 +46,7 @@ RUN set -ex; \
 # see https://github.com/nextcloud/docker/.examples
 COPY supervisord.conf /etc
 
-ENV NEXTCLOUD_UPDATE=1
+ENV NEXTCLOUD_UPDATE=0
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 

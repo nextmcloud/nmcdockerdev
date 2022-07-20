@@ -6,6 +6,9 @@
 ```
 docker build -t ncdev-1.2 .
 ```
+Note: for RUST, on M1 Mac, the image MUST be build for Intel platform and uses Rosetta to run properly.
+The Dockerfile fixes the platform atm to `--platform=linux/amd64` to run reliable on Apple Silicon and
+make tools like krankerl working.
 
 
 
@@ -15,7 +18,7 @@ Set `NMC_DEV_ROOT` environment variable to the place you want to have the artifa
 
 With plain docker the first time after build:
 ```
-docker run --name=devnextcloud -p 8080:80 -d \
+docker run --name=devnextcloud --platform=linux/amd64 -p 8080:80 -d \
 -v $NMC_DEV_ROOT/nc_docker/apps:/var/www/html/custom_apps \
 -v $NMC_DEV_ROOT/nc_docker/config:/var/www/html/config \
 -v $NMC_DEV_ROOT/nc_docker/data:/var/www/html/data \
